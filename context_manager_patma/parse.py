@@ -43,6 +43,17 @@ class ExactPattern(Pattern):
             return None
 
 
+class UnionPattern(Pattern):
+    def __init__(self, *patterns):
+        self.patterns = patterns
+
+    def match(self, value: Any, debug: bool) -> Optional[Dict[str, Any]]:
+        for pattern in self.patterns:
+            if (m := pattern.match(value, debug)):
+                return m
+        return None
+
+
 class ConstructorPattern(Pattern):
     _constructors = {}
 
@@ -70,6 +81,7 @@ class PatternTransformer(Transformer):
     ignore_pattern = IgnorePattern
     name_pattern = NamePattern
     constructor_pattern = ConstructorPattern
+    union_pattern = UnionPattern
 
     @staticmethod
     def string_pattern(token):

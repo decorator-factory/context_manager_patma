@@ -1,6 +1,9 @@
 ?start: pattern
 
-?pattern: string_pattern | name_pattern | constructor_pattern | ignore_pattern
+?pattern: atom_pattern | union_pattern
+?atom_pattern: string_pattern | name_pattern | constructor_pattern | ignore_pattern
+
+union_pattern: (atom_pattern "|")+ atom_pattern
 
 INTEGER: /[-+]?[0-9]+/
 integer_pattern: STRING
