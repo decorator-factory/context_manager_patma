@@ -1,0 +1,21 @@
+?start: pattern
+
+?pattern: string_pattern | name_pattern | constructor_pattern | ignore_pattern
+
+INTEGER: /[-+]?[0-9]+/
+integer_pattern: STRING
+
+STRING: /"([^"]+|\\.)*"/
+string_pattern: STRING
+
+IGNORE: /_[a-z0-9_]*/
+ignore_pattern: IGNORE
+
+SNAKE_CASE_NAME: /[a-z][a-z0-9_]*/
+name_pattern: SNAKE_CASE_NAME
+
+PASCAL_CASE_NAME: /([A-Z][a-z0-9]*)+/
+constructor_pattern: PASCAL_CASE_NAME "(" (pattern ",")* pattern? ")"
+
+%import common.WS
+%ignore WS
