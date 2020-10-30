@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="context_manager_patma",
+    name="context-manager-patma",
     version="0.0.1",  # don't change version for now, early development
     author="decorator-factory",
     author_email="appendix.y.z@gmail.com",
