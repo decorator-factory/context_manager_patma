@@ -1,4 +1,4 @@
-from typing import Dict, Generic, TypeVar
+from typing import Dict, Generic, Literal, TypeVar
 from . import parse
 
 
@@ -63,12 +63,12 @@ class Case:
         else:
             return ()
 
-    def __exit__(self, exc_type, exc_value, exc_tb):
+    def __exit__(self, exc_type, exc_value, exc_tb) -> Literal[True]:
         if exc_type is None:
             raise _MatchSuccessful
         if exc_type is ValueError and "not enough values to unpack" in exc_value.args[0]:
             return True
-        return False
+        return False  # type: ignore
 
 
 register = parse.register_constructor
