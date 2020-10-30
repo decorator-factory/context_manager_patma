@@ -72,3 +72,31 @@ class Case:
 
 
 register = parse.register_constructor
+
+
+def derive(name: str, *attributes: str):
+    """
+    Class decorator to automatically derive `__match__` for a class.
+    Given a class and a list of attributes, this decorator adds a `__match__`
+    class method to the class.
+    """
+    def _register(cls):
+        def __match_derived__(cls, subpatterns, value, debug):
+            if len(subpatterns) != len(attributes):
+                raise ValueError(
+                    f"Expected {len(attributes)} subpatterns, got {len(subpatterns)}"
+                )
+            if not isinstance(value, cls):
+                return None
+            match = {}
+            for pattern, attr in zip(subpatterns, attributes):
+                submatches = pattern.match(getattr(value, attr), debug)
+                if submatches is None:
+                    return None
+                match.update(submatches)
+            return match
+
+        cls.__match__ = classmethod(__match_derived__)
+        register(name)(cls)
+        return cls
+    return _register

@@ -1,7 +1,7 @@
 # Usage example
 
 ```py
-from context_manager_patma import match, register
+from context_manager_patma import match, register, derive
 
 
 @register("Pair")
@@ -27,6 +27,13 @@ class Pair:
         return {**lx, **rx}
 
 
+@derive("Point", "x", "y")
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+
 def f(x):
     with match(x) as case:
         with case("Pair(Pair(left, _), Pair(_, right))") as [m]:
@@ -34,6 +41,12 @@ def f(x):
 
         with case("Pair(left, right)") as [m]:
             ret = (m.left, m.right)
+
+        with case("Point(1, y)") as [m]:
+            ret = (1, m.y)
+
+        with case("Point(x, _)") as [m]:
+            ret = (2, m.x)
 
         with case("_"):
             ret = (None, None)
@@ -43,3 +56,6 @@ def f(x):
 assert f( (1, 2) ) == (1, 2)
 assert f( ((1, 2), (3, 4)) ) == (1, 4)
 assert f( 545345 ) == (None, None)
+assert f( Point(1, 5) ) == (1, 5)
+assert f( Point(32, 5) ) == (2, 32)
+```

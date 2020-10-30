@@ -1,7 +1,15 @@
-from . import register, match
+from . import register, match, derive
+from dataclasses import dataclass
 
 
 #####################
+
+
+@derive("Point", "x", "y")
+@dataclass
+class Point:
+    x: int
+    y: int
 
 
 @register("Thing")
@@ -56,19 +64,17 @@ def what_is(arg, debug=False):
         with case("Pair(Thing(x), Thing(_))") as [m]:
             r = m.x
 
+        with case("Point(a, b)") as [m]:
+            r = m.a + m.b
+
         with case("_") as [m]:
             r = 666
 
     return r
 
 
-print(what_is(42))
-print(what_is(Thing(5)))
-print(what_is((1, 5)))
-print(what_is((Thing(1), Thing(2))))
-
-
 assert what_is(42) == 666
 assert what_is(Thing(5)) == 5
 assert what_is((1, 5)) == 666
 assert what_is((Thing(1), Thing(2))) == 1
+assert what_is(Point(5, 7)) == 12
